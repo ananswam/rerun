@@ -37,6 +37,9 @@ namespace rerun::blueprint::components {
 
         /// Mapbox Light is a light-themed map designed by Mapbox.
         MapboxLight = 5,
+
+        /// Custom tile server (URL configured in viewer settings).
+        Custom = 6,
     };
 } // namespace rerun::blueprint::components
 

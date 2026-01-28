@@ -22,4 +22,7 @@ enum MapProvider: ubyte (
 
   /// Mapbox Light is a light-themed map designed by Mapbox.
   MapboxLight,
+
+  /// Custom tile server (URL configured in viewer settings).
+  Custom,
 }

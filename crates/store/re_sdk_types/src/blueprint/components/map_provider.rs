@@ -41,6 +41,9 @@ pub enum MapProvider {
 
     /// Mapbox Light is a light-themed map designed by Mapbox.
     MapboxLight = 5,
+
+    /// Custom tile server (URL configured in viewer settings).
+    Custom = 6,
 }
 
 impl ::re_types_core::Component for MapProvider {
@@ -136,6 +139,7 @@ impl std::fmt::Display for MapProvider {
             Self::MapboxDark => write!(f, "MapboxDark"),
             Self::MapboxSatellite => write!(f, "MapboxSatellite"),
             Self::MapboxLight => write!(f, "MapboxLight"),
+            Self::Custom => write!(f, "Custom"),
         }
     }
 }
@@ -151,6 +155,7 @@ impl ::re_types_core::reflection::Enum for MapProvider {
             Self::MapboxDark,
             Self::MapboxSatellite,
             Self::MapboxLight,
+            Self::Custom,
         ]
     }
 
@@ -162,6 +167,7 @@ impl ::re_types_core::reflection::Enum for MapProvider {
             Self::MapboxDark => "Mapbox Dark is a dark-themed map designed by Mapbox.",
             Self::MapboxSatellite => "Mapbox Satellite is a satellite map designed by Mapbox.",
             Self::MapboxLight => "Mapbox Light is a light-themed map designed by Mapbox.",
+            Self::Custom => "Custom tile server (URL configured in viewer settings).",
         }
     }
 

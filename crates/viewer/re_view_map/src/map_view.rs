@@ -605,6 +605,21 @@ fn get_tile_manager(
             options,
             egui_ctx.clone(),
         ),
+        MapProvider::Custom => {
+            if let Some(custom_url) = ctx.app_options().custom_tile_url() {
+                HttpTiles::with_options(
+                    crate::custom_tile_source::CustomTileSource::new(custom_url.to_owned()),
+                    options,
+                    egui_ctx.clone(),
+                )
+            } else {
+                re_log::warn_once!(
+                    "No custom tile URL configured. Set it in the viewer settings. \
+                    Falling back to OpenStreetMap."
+                );
+                HttpTiles::with_options(walkers::sources::OpenStreetMap, options, egui_ctx.clone())
+            }
+        }
     }
 }
 

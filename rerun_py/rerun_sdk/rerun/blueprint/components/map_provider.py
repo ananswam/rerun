@@ -39,6 +39,9 @@ class MapProvider(Enum):
     MapboxLight = 5
     """Mapbox Light is a light-themed map designed by Mapbox."""
 
+    Custom = 6
+    """Custom tile server (URL configured in viewer settings)."""
+
     @classmethod
     def auto(cls, val: str | int | MapProvider) -> MapProvider:
         """Best-effort converter, including a case-insensitive string matcher."""
@@ -63,11 +66,13 @@ class MapProvider(Enum):
 MapProviderLike = (
     MapProvider
     | Literal[
+        "Custom",
         "MapboxDark",
         "MapboxLight",
         "MapboxSatellite",
         "MapboxStreets",
         "OpenStreetMap",
+        "custom",
         "mapboxdark",
         "mapboxlight",
         "mapboxsatellite",
@@ -81,11 +86,13 @@ MapProviderLike = (
 MapProviderArrayLike = (
     MapProvider
     | Literal[
+        "Custom",
         "MapboxDark",
         "MapboxLight",
         "MapboxSatellite",
         "MapboxStreets",
         "OpenStreetMap",
+        "custom",
         "mapboxdark",
         "mapboxlight",
         "mapboxsatellite",
