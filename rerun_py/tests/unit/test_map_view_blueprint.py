@@ -25,3 +25,18 @@ def test_map_view_blueprint() -> None:
 
     # assert bp1 == bp2 == bp3 == bp4
     assert_blueprint_contents_are_equal(bp1, bp2, bp3, bp4)
+
+
+def test_map_view_blueprint_custom_provider() -> None:
+    """Custom map provider can be set via MapProvider.Custom."""
+
+    bp1 = rrb.MapView(origin="point", name="MapView", zoom=16, background="custom")
+    bp2 = rrb.MapView(origin="point", name="MapView", zoom=16, background=rrb.MapProvider.Custom)
+    bp3 = rrb.MapView(
+        origin="point",
+        name="MapView",
+        zoom=rrb.archetypes.MapZoom(16),
+        background=rrb.archetypes.MapBackground(rrb.MapProvider.Custom),
+    )
+
+    assert_blueprint_contents_are_equal(bp1, bp2, bp3)

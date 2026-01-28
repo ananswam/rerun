@@ -67,6 +67,12 @@ pub struct AppOptions {
     /// we prefetch data ahead of what is strictly needed.
     pub max_fetch_stage: FetchStage,
 
+    /// Custom map tile server URL pattern.
+    ///
+    /// Must include `{z}`, `{x}`, and `{y}` placeholders.
+    /// Example: `"https://myserver.com/tiles/{z}/{x}/{y}.png"`
+    pub custom_tile_url: String,
+
     /// Path to the directory suitable for storing cache data.
     ///
     /// By cache data, we mean data that is safe to be garbage collected by the OS. Defaults to
@@ -111,6 +117,8 @@ impl Default for AppOptions {
 
             max_fetch_stage: FetchStage::default(),
 
+            custom_tile_url: String::new(),
+
             #[cfg(not(target_arch = "wasm32"))]
             cache_directory: Self::default_cache_directory(),
         }
@@ -133,6 +141,14 @@ impl AppOptions {
             std::env::var(MAPBOX_ACCESS_TOKEN_ENV_VAR).ok()
         } else {
             Some(self.mapbox_access_token.clone())
+        }
+    }
+
+    pub fn custom_tile_url(&self) -> Option<&str> {
+        if self.custom_tile_url.is_empty() {
+            None
+        } else {
+            Some(&self.custom_tile_url)
         }
     }
 
@@ -211,4 +227,25 @@ pub struct ExperimentalAppOptions {
     /// Native-only; ignored unless the viewer was built with the in-memory server.
     #[cfg(not(target_arch = "wasm32"))]
     pub use_internal_catalog: bool,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_custom_tile_url_empty_returns_none() {
+        let options = AppOptions::default();
+        assert_eq!(options.custom_tile_url(), None);
+    }
+
+    #[test]
+    fn test_custom_tile_url_set_returns_value() {
+        let mut options = AppOptions::default();
+        options.custom_tile_url = "https://example.com/{z}/{x}/{y}.png".to_owned();
+        assert_eq!(
+            options.custom_tile_url(),
+            Some("https://example.com/{z}/{x}/{y}.png")
+        );
+    }
 }

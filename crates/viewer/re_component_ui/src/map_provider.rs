@@ -21,8 +21,20 @@ impl VariantAvailableProvider<MapProvider> for MapProviderVariantAvailable {
             }
         };
 
+        let custom_available = if ctx.app_options.custom_tile_url().is_some() {
+            VariantAvailable::Yes
+        } else {
+            VariantAvailable::No {
+                reason_markdown: "A custom tile URL is not configured. You can set it in the \
+                viewer settings."
+                    .to_owned(),
+            }
+        };
+
         match variant {
             MapProvider::OpenStreetMap => VariantAvailable::Yes,
+
+            MapProvider::Custom => custom_available,
 
             MapProvider::MapboxStreets
             | MapProvider::MapboxDark

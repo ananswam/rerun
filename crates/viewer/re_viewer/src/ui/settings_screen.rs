@@ -92,6 +92,7 @@ fn settings_screen_ui_impl(ui: &mut egui::Ui, app_options: &mut AppOptions, keep
         mapbox_access_token,
         memory_limit,
         max_fetch_stage,
+        custom_tile_url,
 
         #[cfg(not(target_arch = "wasm32"))]
             cache_directory: _, // not yet exposed
@@ -161,7 +162,7 @@ fn settings_screen_ui_impl(ui: &mut egui::Ui, app_options: &mut AppOptions, keep
 
     separator_with_some_space(ui);
     ui.strong("Map view");
-    map_view_section_ui(ui, mapbox_access_token);
+    map_view_section_ui(ui, mapbox_access_token, custom_tile_url);
 
     separator_with_some_space(ui);
     ui.strong("Video");
@@ -367,7 +368,11 @@ fn time_format_section_ui(ui: &mut Ui, timestamp_format: &mut TimestampFormat) {
     timestamp_example_ui(ui, timestamp, TimestampFormat::unix_epoch());
 }
 
-fn map_view_section_ui(ui: &mut Ui, mapbox_access_token: &mut String) {
+fn map_view_section_ui(
+    ui: &mut Ui,
+    mapbox_access_token: &mut String,
+    custom_tile_url: &mut String,
+) {
     ui.horizontal(|ui| {
         // TODO(ab): needed for alignment, we should use egui flex instead
         ui.set_height(19.0);
@@ -383,6 +388,30 @@ fn map_view_section_ui(ui: &mut Ui, mapbox_access_token: &mut String) {
 
         ui.add(egui::TextEdit::singleline(mapbox_access_token).password(true));
     });
+
+    ui.horizontal(|ui| {
+        ui.set_height(19.0);
+
+        ui.label("Custom tile server URL:").on_hover_ui(|ui| {
+            ui.markdown_ui(
+                "URL pattern for custom map tiles. Must include `{z}`, `{x}`, and `{y}` placeholders.\n\n\
+                Example: `https://myserver.com/tiles/{z}/{x}/{y}.png`",
+            );
+        });
+
+        ui.add(
+            egui::TextEdit::singleline(custom_tile_url)
+                .hint_text("https://server.com/tiles/{z}/{x}/{y}.png"),
+        );
+    });
+
+    if !custom_tile_url.is_empty()
+        && (!custom_tile_url.contains("{z}")
+            || !custom_tile_url.contains("{x}")
+            || !custom_tile_url.contains("{y}"))
+    {
+        ui.error_label("URL must include `{z}`, `{x}`, and `{y}` placeholders.");
+    }
 }
 
 fn video_section_ui(ui: &mut Ui, options: &mut VideoOptions) {
